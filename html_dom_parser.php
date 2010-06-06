@@ -97,24 +97,24 @@ class Html_Dom_Node
     public $_ = array();
     private $dom = NULL;
 
-    function __construct($dom)
+    public function __construct($dom)
     {
         $this->dom = $dom;
         $dom->nodes[] = $this;
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->clear();
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->outertext();
     }
 
     // clean up memory due to php5 circular references memory leak...
-    function clear()
+    public function clear()
     {
         $this->dom = NULL;
         $this->nodes = NULL;
@@ -123,7 +123,7 @@ class Html_Dom_Node
     }
 
     // dump node's tree
-    function dump($show_attr = true, $deep = 0)
+    public function dump($show_attr = true, $deep = 0)
     {
         $lead = str_repeat('    ', $deep);
 
@@ -142,13 +142,13 @@ class Html_Dom_Node
     }
 
     // returns the parent of node
-    function parent()
+    public function parent()
     {
         return $this->parent;
     }
 
     // returns children of node
-    function children($idx = -1)
+    public function children($idx = -1)
     {
         if ($idx === - 1)
             return $this->children;
@@ -158,7 +158,7 @@ class Html_Dom_Node
     }
 
     // returns the first child of node
-    function first_child()
+    public function first_child()
     {
         if (count($this->children) > 0)
             return $this->children[0];
@@ -166,7 +166,7 @@ class Html_Dom_Node
     }
 
     // returns the last child of node
-    function last_child()
+    public function last_child()
     {
         if (($count = count($this->children)) > 0)
             return $this->children[$count - 1];
@@ -174,7 +174,7 @@ class Html_Dom_Node
     }
 
     // returns the next sibling of node
-    function next_sibling()
+    public function next_sibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -188,7 +188,7 @@ class Html_Dom_Node
     }
 
     // returns the previous sibling of node
-    function prev_sibling()
+    public function prev_sibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -202,7 +202,7 @@ class Html_Dom_Node
     }
 
     // get dom node's inner html
-    function innertext()
+    public function innertext()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
             return $this->_[HDOM_INFO_INNER];
@@ -216,7 +216,7 @@ class Html_Dom_Node
     }
 
     // get dom node's outer text (with tag)
-    function outertext()
+    public function outertext()
     {
         if ($this->tag === 'root')
             return $this->innertext();
@@ -249,7 +249,7 @@ class Html_Dom_Node
     }
 
     // get dom node's plain text
-    function text()
+    public function text()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
             return $this->_[HDOM_INFO_INNER];
@@ -270,7 +270,7 @@ class Html_Dom_Node
         return $ret;
     }
 
-    function xmltext()
+    public function xmltext()
     {
         $ret = $this->innertext();
         $ret = str_ireplace('<![CDATA[', '', $ret);
@@ -279,7 +279,7 @@ class Html_Dom_Node
     }
 
     // build node's text with tag
-    function makeup()
+    public function makeup()
     {
         // text, comment, unknown
         if (isset($this->_[HDOM_INFO_TEXT]))
@@ -316,7 +316,7 @@ class Html_Dom_Node
     }
 
     // find elements by css selector
-    function find($selector, $idx = NULL)
+    public function find($selector, $idx = NULL)
     {
         $selectors = $this->parse_selector($selector);
         if (($count = count($selectors)) === 0)
@@ -541,7 +541,7 @@ class Html_Dom_Node
         return $selectors;
     }
 
-    function __get($name)
+    public function __get($name)
     {
         if (isset($this->attr[$name]))
             return $this->attr[$name];
@@ -555,7 +555,7 @@ class Html_Dom_Node
         }
     }
 
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         switch ($name)
         {
@@ -573,7 +573,7 @@ class Html_Dom_Node
         $this->attr[$name] = $value;
     }
 
-    function __isset($name)
+    public function __isset($name)
     {
         switch ($name)
         {
@@ -585,84 +585,84 @@ class Html_Dom_Node
         return (array_key_exists($name, $this->attr)) ? true : isset($this->attr[$name]);
     }
 
-    function __unset($name)
+    public function __unset($name)
     {
         if (isset($this->attr[$name]))
             unset($this->attr[$name]);
     }
 
     // camel naming conventions
-    function getAllAttributes()
+    public function getAllAttributes()
     {
 		return $this->attr;
 	}
 
-    function getAttribute($name)
+    public function getAttribute($name)
     {
 		return $this->__get($name);
 	}
 
-    function setAttribute($name, $value)
+    public function setAttribute($name, $value)
     {
 		$this->__set($name, $value);
 	}
 
-    function hasAttribute($name)
+    public function hasAttribute($name)
     {
 		return $this->__isset($name);
 	}
 
-    function removeAttribute($name)
+    public function removeAttribute($name)
     {
 		$this->__set($name, NULL);
 	}
 
-    function getElementById($id)
+    public function getElementById($id)
     {
 		return $this->find("#$id", 0);
 	}
 
-    function getElementsById($id, $idx = NULL)
+    public function getElementsById($id, $idx = NULL)
     {
 		return $this->find("#$id", $idx);
 	}
 
-    function getElementByTagName($name)
+    public function getElementByTagName($name)
     {
 		return $this->find($name, 0);
 	}
 
-    function getElementsByTagName($name, $idx = NULL)
+    public function getElementsByTagName($name, $idx = NULL)
     {
 		return $this->find($name, $idx);
 	}
 
-    function parentNode()
+    public function parentNode()
     {
 		return $this->parent();
 	}
 
-    function childNodes($idx = -1)
+    public function childNodes($idx = -1)
     {
 		return $this->children($idx);
 	}
 
-    function firstChild()
+    public function firstChild()
     {
 		return $this->first_child();
 	}
 
-    function lastChild()
+    public function lastChild()
     {
 		return $this->last_child();
 	}
 
-    function nextSibling()
+    public function nextSibling()
     {
 		return $this->next_sibling();
 	}
 
-    function previousSibling()
+    public function previousSibling()
     {
 		return $this->prev_sibling();
 	}
@@ -702,7 +702,7 @@ class Html_Dom
         'nobr' => array('nobr' => 1),
     );
 
-    function __construct($str = NULL)
+    public function __construct($str = NULL)
     {
         if ($str)
         {
@@ -713,13 +713,13 @@ class Html_Dom
         }
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->clear();
     }
 
     // load html from string
-    function load($str, $lowercase = true)
+    public function load($str, $lowercase = true)
     {
         // prepare
         $this->prepare($str, $lowercase);
@@ -748,7 +748,7 @@ class Html_Dom
     }
 
     // load html from file
-    function load_file()
+    public function load_file()
     {
         $args = func_get_args();
         @$this->load(call_user_func_array('file_get_contents', $args), true);
@@ -757,19 +757,19 @@ class Html_Dom
     }
 
     // set callback function
-    function set_callback($function_name)
+    public function set_callback($function_name)
     {
         $this->callback = $function_name;
     }
 
     // remove callback function
-    function remove_callback()
+    public function remove_callback()
     {
         $this->callback = NULL;
     }
 
     // save dom as string
-    function save($filepath = '')
+    public function save($filepath = '')
     {
         $ret = $this->root->innertext();
         if ($filepath !== '')
@@ -778,13 +778,13 @@ class Html_Dom
     }
 
     // find dom node by css selector
-    function find($selector, $idx = NULL)
+    public function find($selector, $idx = NULL)
     {
         return $this->root->find($selector, $idx);
     }
 
     // clean up memory due to php5 circular references memory leak...
-    function clear()
+    public function clear()
     {
         foreach ($this->nodes as $n)
         {
@@ -805,7 +805,7 @@ class Html_Dom
         unset($this->noise);
     }
 
-    function dump($show_attr = true)
+    public function dump($show_attr = true)
     {
         $this->root->dump($show_attr);
     }
@@ -1215,7 +1215,7 @@ class Html_Dom
     }
 
     // restore noise to html content
-    function restore_noise($text)
+    public function restore_noise($text)
     {
         while (($pos = strpos($text, '___noise___'))!==false)
         {
@@ -1226,12 +1226,12 @@ class Html_Dom
         return $text;
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->root->innertext();
     }
 
-    function __get($name)
+    public function __get($name)
     {
         switch ($name)
         {
@@ -1242,42 +1242,42 @@ class Html_Dom
     }
 
     // camel naming conventions
-    function childNodes($idx=-1)
+    public function childNodes($idx=-1)
     {
         return $this->root->childNodes($idx);
     }
 
-    function firstChild()
+    public function firstChild()
     {
         return $this->root->first_child();
     }
 
-    function lastChild()
+    public function lastChild()
     {
         return $this->root->last_child();
     }
 
-    function getElementById($id)
+    public function getElementById($id)
     {
         return $this->find("#$id", 0);
     }
 
-    function getElementsById($id, $idx = NULL)
+    public function getElementsById($id, $idx = NULL)
     {
         return $this->find("#$id", $idx);
     }
 
-    function getElementByTagName($name)
+    public function getElementByTagName($name)
     {
         return $this->find($name, 0);
     }
 
-    function getElementsByTagName($name, $idx = -1)
+    public function getElementsByTagName($name, $idx = -1)
     {
         return $this->find($name, $idx);
     }
 
-    function loadFile()
+    public function loadFile()
     {
         $args = func_get_args();
         @$this->load(call_user_func_array('file_get_contents', $args), true);
