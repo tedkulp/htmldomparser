@@ -22,6 +22,7 @@
  *             (http://sourceforge.net/projects/simplehtmldom/)
  * @license    http://www.gnu.org/licenses/gpl.html	GPL General Public License
  */
+
 define('HDOM_TYPE_ELEMENT', 1);
 define('HDOM_TYPE_COMMENT', 2);
 define('HDOM_TYPE_TEXT', 3);
@@ -84,8 +85,12 @@ function str_get_dom($str, $lowercase = true)
     return $dom;
 }
 
-// simple html dom node
-// -----------------------------------------------------------------------------
+
+/**
+ * Class for DOM nodes of a HTML document
+ *
+ * @package htmldomparser
+ */
 class Html_Dom_Node
 {
     public $nodetype = HDOM_TYPE_TEXT;
@@ -668,11 +673,21 @@ class Html_Dom_Node
 	}
 }
 
-// simple html dom parser
-// -----------------------------------------------------------------------------
+/**
+ * A HTML document consisting of nodes
+ *
+ * @uses Html_Dom_Node
+ * @package htmldomparser
+ */
 class Html_Dom
 {
+	/**
+	 * The root node of the document
+	 *
+	 * @var Html_Dom_Node
+	 */
     public $root = NULL;
+
     public $nodes = array();
     public $callback = NULL;
     public $lowercase = false;
@@ -702,6 +717,14 @@ class Html_Dom
         'nobr' => array('nobr' => 1),
     );
 
+
+	/**
+	 * Constructor
+	 *
+	 * Create a DOM document object from the optionally given file or string
+	 *
+	 * @var string $str  The filename of a file or a string to be parsed
+	 */
     public function __construct($str = NULL)
     {
         if ($str)
