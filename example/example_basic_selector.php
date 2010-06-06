@@ -1,6 +1,6 @@
 <?php
 // example of how to use basic selector to retrieve HTML contents
-include('../simple_html_dom.php');
+include('../html_dom_parser.php');
  
 // get DOM from URL or file
 $html = file_get_html('http://www.google.com/');

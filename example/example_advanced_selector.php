@@ -1,6 +1,6 @@
 <?php
 // example of how to use advanced selector features
-include('../simple_html_dom.php');
+include('../html_dom_parser.php');
 
 // -----------------------------------------------------------------------------
 // descendant selector

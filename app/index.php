@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-include_once('../simple_html_dom.php');
+include_once('../html_dom_parser.php');
 
 $html = file_get_html('google.htm');
 //$html = file_get_html('youtube.htm');

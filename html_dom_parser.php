@@ -45,7 +45,7 @@ define('HDOM_INFO_ENDSPACE', 7);
 // get html dom form file
 function file_get_html()
 {
-    $dom = new simple_html_dom;
+    $dom = new Html_Dom;
     $args = func_get_args();
     @$dom->load(call_user_func_array('file_get_contents', $args), true);
     if (($error = error_get_last()) !== NULL)
@@ -56,7 +56,7 @@ function file_get_html()
 // get html dom form string
 function str_get_html($str, $lowercase = true)
 {
-    $dom = new simple_html_dom;
+    $dom = new Html_Dom;
     $dom->load($str, $lowercase);
     return $dom;
 }
@@ -70,7 +70,7 @@ function dump_html_tree($node, $show_attr = true)
 // get dom form file (deprecated)
 function file_get_dom()
 {
-    $dom = new simple_html_dom;
+    $dom = new Html_Dom;
     $args = func_get_args();
     $dom->load(call_user_func_array('file_get_contents', $args), true);
     return $dom;
@@ -79,14 +79,14 @@ function file_get_dom()
 // get dom form string (deprecated)
 function str_get_dom($str, $lowercase = true)
 {
-    $dom = new simple_html_dom;
+    $dom = new Html_Dom;
     $dom->load($str, $lowercase);
     return $dom;
 }
 
 // simple html dom node
 // -----------------------------------------------------------------------------
-class simple_html_dom_node
+class Html_Dom_Node
 {
     public $nodetype = HDOM_TYPE_TEXT;
     public $tag = 'text';
@@ -670,7 +670,7 @@ class simple_html_dom_node
 
 // simple html dom parser
 // -----------------------------------------------------------------------------
-class simple_html_dom
+class Html_Dom
 {
     public $root = NULL;
     public $nodes = array();
@@ -820,7 +820,7 @@ class simple_html_dom
         $this->noise = array();
         $this->nodes = array();
         $this->lowercase = $lowercase;
-        $this->root = new simple_html_dom_node($this);
+        $this->root = new Html_Dom_Node($this);
         $this->root->tag = 'root';
         $this->root->_[HDOM_INFO_BEGIN] = -1;
         $this->root->nodetype = HDOM_TYPE_ROOT;
@@ -838,7 +838,7 @@ class simple_html_dom
             return $this->read_tag();
 
         // text
-        $node = new simple_html_dom_node($this);
+        $node = new Html_Dom_Node($this);
         ++$this->cursor;
         $node->_[HDOM_INFO_TEXT] = $s;
         $this->link_nodes($node, false);
@@ -919,7 +919,7 @@ class simple_html_dom
             return true;
         }
 
-        $node = new simple_html_dom_node($this);
+        $node = new Html_Dom_Node($this);
         $node->_[HDOM_INFO_BEGIN] = $this->cursor;
         ++$this->cursor;
         $tag = $this->copy_until($this->token_slash);
@@ -1108,7 +1108,7 @@ class simple_html_dom
     // as a text node
     protected function as_text_node($tag)
     {
-        $node = new simple_html_dom_node($this);
+        $node = new Html_Dom_Node($this);
         ++$this->cursor;
         $node->_[HDOM_INFO_TEXT] = '</' . $tag . '>';
         $this->link_nodes($node, false);

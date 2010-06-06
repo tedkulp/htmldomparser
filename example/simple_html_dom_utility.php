@@ -1,5 +1,5 @@
 <?php
-include_once('../simple_html_dom.php');
+include_once('../html_dom_parser.php');
 
 // -----------------------------------------------------------------------------
 // remove HTML comments

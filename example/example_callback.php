@@ -1,5 +1,5 @@
 <?php
-include_once('../simple_html_dom.php');
+include_once('../html_dom_parser.php');
 
 
 // 1. Write a function with parameter "$element"
