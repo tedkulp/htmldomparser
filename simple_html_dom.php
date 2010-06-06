@@ -1,16 +1,26 @@
 <?php
-/*******************************************************************************
-Version: 1.11 ($Rev$)
-Website: http://sourceforge.net/projects/simplehtmldom/
-Author: S.C. Chen <me578022@gmail.com>
-Acknowledge: Jose Solorzano (https://sourceforge.net/projects/php-html/)
-Contributions by:
-    Yousuke Kumakura (Attribute filters)
-    Vadim Voituk (Negative indexes supports of "find" method)
-    Antcs (Constructor with automatically load contents either text or file/url)
-Licensed under The MIT License
-Redistributions of files must retain the above copyright notice.
-*******************************************************************************/
+/**
+ * HTML DOM Parser
+ *
+ * LICENSE
+ *
+ * This source file is subject to the GNU General Public License as published
+ * by the Free Software Foundation - either version 3 of the License,
+ * or (at your option) any later version - that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl.html
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * @category   lie2815
+ * @package    htmldomparser
+ * @copyright  Copyright (c) 2010 Franz Liedke (http://www.develophp.org),
+ *             based on code (C) S.C. Chen <me578022@gmail.com>
+ *             (http://sourceforge.net/projects/simplehtmldom/)
+ * @license    http://www.gnu.org/licenses/gpl.html	GPL General Public License
+ */
 
 define('HDOM_TYPE_ELEMENT', 1);
 define('HDOM_TYPE_COMMENT', 2);
