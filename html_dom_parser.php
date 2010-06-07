@@ -118,7 +118,7 @@ class Html_Dom_Node
         return $this->outertext();
     }
 
-    // clean up memory due to php5 circular references memory leak...
+// clean up memory due to php5 circular references memory leak...
     public function clear()
     {
         $this->dom = NULL;
@@ -127,7 +127,7 @@ class Html_Dom_Node
         $this->children = NULL;
     }
 
-    // dump node's tree
+// dump node's tree
     public function dump($show_attr = true, $deep = 0)
     {
         $lead = str_repeat('    ', $deep);
@@ -146,13 +146,13 @@ class Html_Dom_Node
             $c->dump($show_attr, $deep + 1);
     }
 
-    // returns the parent of node
+// returns the parent of node
     public function parent()
     {
         return $this->parent;
     }
 
-    // returns children of node
+// returns children of node
     public function children($idx = -1)
     {
         if ($idx === - 1)
@@ -162,24 +162,24 @@ class Html_Dom_Node
         return NULL;
     }
 
-    // returns the first child of node
-    public function first_child()
+// returns the first child of node
+    public function firstChild()
     {
         if (count($this->children) > 0)
             return $this->children[0];
         return NULL;
     }
 
-    // returns the last child of node
-    public function last_child()
+// returns the last child of node
+    public function lastChild()
     {
         if (($count = count($this->children)) > 0)
             return $this->children[$count - 1];
         return NULL;
     }
 
-    // returns the next sibling of node
-    public function next_sibling()
+// returns the next sibling of node
+    public function nextSibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -192,8 +192,8 @@ class Html_Dom_Node
         return $this->parent->children[$idx];
     }
 
-    // returns the previous sibling of node
-    public function prev_sibling()
+// returns the previous sibling of node
+    public function prevSibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -206,8 +206,8 @@ class Html_Dom_Node
         return $this->parent->children[$idx];
     }
 
-    // get dom node's inner html
-    public function innertext()
+// get dom node's inner html
+    public function innerText()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
             return $this->_[HDOM_INFO_INNER];
@@ -220,13 +220,13 @@ class Html_Dom_Node
         return $ret;
     }
 
-    // get dom node's outer text (with tag)
-    public function outertext()
+// get dom node's outer text (with tag)
+    public function outerText()
     {
         if ($this->tag === 'root')
             return $this->innertext();
 
-        // trigger callback
+// trigger callback
         if ($this->dom->callback !== NULL)
             call_user_func_array($this->dom->callback, array($this));
 
@@ -235,10 +235,10 @@ class Html_Dom_Node
         if (isset($this->_[HDOM_INFO_TEXT]))
             return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
 
-        // render begin tag
+// render begin tag
         $ret = $this->dom->nodes[$this->_[HDOM_INFO_BEGIN]]->makeup();
 
-        // render inner text
+// render inner text
         if (isset($this->_[HDOM_INFO_INNER]))
             $ret .= $this->_[HDOM_INFO_INNER];
         else
@@ -247,13 +247,13 @@ class Html_Dom_Node
                 $ret .= $n->outertext();
         }
 
-        // render end tag
+// render end tag
         if (isset($this->_[HDOM_INFO_END]) && $this->_[HDOM_INFO_END]!=0)
             $ret .= '</' . $this->tag . '>';
         return $ret;
     }
 
-    // get dom node's plain text
+// get dom node's plain text
     public function text()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
@@ -275,7 +275,7 @@ class Html_Dom_Node
         return $ret;
     }
 
-    public function xmltext()
+    public function xmlText()
     {
         $ret = $this->innertext();
         $ret = str_ireplace('<![CDATA[', '', $ret);
@@ -283,10 +283,10 @@ class Html_Dom_Node
         return $ret;
     }
 
-    // build node's text with tag
+// build node's text with tag
     public function makeup()
     {
-        // text, comment, unknown
+// text, comment, unknown
         if (isset($this->_[HDOM_INFO_TEXT]))
             return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
 
@@ -297,12 +297,12 @@ class Html_Dom_Node
         {
             ++$i;
 
-            // skip removed attribute
+// skip removed attribute
             if ($val === NULL || $val === false)
                 continue;
 
             $ret .= $this->_[HDOM_INFO_SPACE][$i][0];
-            //no value attr: nowrap, checked selected...
+//no value attr: nowrap, checked selected...
             if ($val === true)
                 $ret .= $key;
             else
@@ -320,7 +320,7 @@ class Html_Dom_Node
         return $ret . $this->_[HDOM_INFO_ENDSPACE] . '>';
     }
 
-    // find elements by css selector
+// find elements by css selector
     public function find($selector, $idx = NULL)
     {
         $selectors = $this->parse_selector($selector);
@@ -328,7 +328,7 @@ class Html_Dom_Node
             return array();
         $found_keys = array();
 
-        // find each selector
+// find each selector
         for ($c = 0; $c < $count; ++$c)
         {
             if (($levle = count($selectors[0])) === 0)
@@ -338,7 +338,7 @@ class Html_Dom_Node
 
             $head = array($this->_[HDOM_INFO_BEGIN] => 1);
 
-            // handle descendant selectors, no recursive!
+// handle descendant selectors, no recursive!
             for ($l = 0; $l < $levle; ++$l)
             {
                 $ret = array();
@@ -357,14 +357,14 @@ class Html_Dom_Node
             }
         }
 
-        // sort keys
+// sort keys
         ksort($found_keys);
 
         $found = array();
         foreach ($found_keys as $k => $v)
             $found[] = $this->dom->nodes[$k];
 
-        // return nth-element or array
+// return nth-element or array
         if (is_NULL($idx))
             return $found;
         else if ($idx < 0)
@@ -372,12 +372,12 @@ class Html_Dom_Node
         return (isset($found[$idx])) ? $found[$idx] : NULL;
     }
 
-    // seek for given conditions
+// seek for given conditions
     protected function seek($selector, &$ret)
     {
         list($tag, $key, $val, $exp, $no_key) = $selector;
 
-        // xpath index
+// xpath index
         if ($tag && $key && is_numeric($key))
         {
             $count = 0;
@@ -419,12 +419,12 @@ class Html_Dom_Node
                 continue;
             }
 
-            // compare tag
+// compare tag
             if ($tag && $tag != $node->tag && $tag !== '*')
             {
                 $pass = false;
             }
-            // compare key
+// compare key
             if ($pass && $key)
             {
                 if ($no_key)
@@ -435,11 +435,11 @@ class Html_Dom_Node
                 else if (!isset($node->attr[$key]))
                     $pass = false;
             }
-            // compare value
+// compare value
             if ($pass && $key && $val && $val !== '*')
             {
                 $check = $this->match($exp, $val, $node->attr[$key]);
-                // handle multiple class
+// handle multiple class
                 if (!$check && strcasecmp($key, 'class') === 0)
                 {
                     foreach (explode(' ', $node->attr[$key]) as $k)
@@ -478,14 +478,14 @@ class Html_Dom_Node
         return false;
     }
 
-    protected function parse_selector($selector_string)
+    protected function parseSelector($selector_string)
     {
-        // pattern of CSS selectors, modified from mootools
+// pattern of CSS selectors, modified from mootools
         $pattern = "/([\w-:\*]*)(?:\#([\w-]+)|\.([\w-]+))?(?:\[@?(!?[\w-]+)(?:([!*^$]?=)[\"']?(.*?)[\"']?)?\])?([\/, ]+)/is";
         preg_match_all($pattern, trim($selector_string) . ' ', $matches, PREG_SET_ORDER);
         $selectors = array();
         $result = array();
-        //print_r($matches);
+//print_r($matches);
 
         foreach ($matches as $m)
         {
@@ -493,46 +493,46 @@ class Html_Dom_Node
             if ($m[0] === '' || $m[0] === '/' || $m[0] === '//')
                 continue;
 
-            // for xpath generated by borwser
+// for xpath generated by borwser
             if ($m[1] === 'tbody')
                 continue;
 
             list($tag, $key, $val, $exp, $no_key) = array($m[1], NULL, NULL, '=', false);
             if (!empty($m[2]))
             {
-				$key = 'id';
-				$val = $m[2];
-			}
+                $key = 'id';
+                $val = $m[2];
+            }
             if (!empty($m[3]))
             {
-				$key = 'class';
-				$val = $m[3];
-			}
-			if (!empty($m[4]))
+                $key = 'class';
+                $val = $m[3];
+            }
+            if (!empty($m[4]))
             {
-				$key = $m[4];
-			}
+                $key = $m[4];
+            }
             if (!empty($m[5]))
             {
-				$exp = $m[5];
-			}
+                $exp = $m[5];
+            }
             if (!empty($m[6]))
             {
-				$val = $m[6];
-			}
+                $val = $m[6];
+            }
 
-            // convert to lowercase
+// convert to lowercase
             if ($this->dom->lowercase)
             {
-				$tag = strtolower($tag);
-				$key = strtolower($key);
-			}
-            //elements that do NOT have the specified attribute
+                $tag = strtolower($tag);
+                $key = strtolower($key);
+            }
+//elements that do NOT have the specified attribute
             if (isset($key[0]) && $key[0] === '!')
             {
-				$key = substr($key, 1);
-				$no_key = true;
-			}
+                $key = substr($key, 1);
+                $no_key = true;
+            }
 
             $result[] = array($tag, $key, $val, $exp, $no_key);
             if (trim($m[7]) === ',')
@@ -586,7 +586,7 @@ class Html_Dom_Node
             case 'innertext': return true;
             case 'plaintext': return true;
         }
-        //no value attr: nowrap, checked selected...
+//no value attr: nowrap, checked selected...
         return (array_key_exists($name, $this->attr)) ? true : isset($this->attr[$name]);
     }
 
@@ -596,81 +596,61 @@ class Html_Dom_Node
             unset($this->attr[$name]);
     }
 
-    // camel naming conventions
+// camel naming conventions
     public function getAllAttributes()
     {
-		return $this->attr;
-	}
+        return $this->attr;
+    }
 
     public function getAttribute($name)
     {
-		return $this->__get($name);
-	}
+        return $this->__get($name);
+    }
 
     public function setAttribute($name, $value)
     {
-		$this->__set($name, $value);
-	}
+        $this->__set($name, $value);
+    }
 
     public function hasAttribute($name)
     {
-		return $this->__isset($name);
-	}
+        return $this->__isset($name);
+    }
 
     public function removeAttribute($name)
     {
-		$this->__set($name, NULL);
-	}
+        $this->__set($name, NULL);
+    }
 
     public function getElementById($id)
     {
-		return $this->find("#$id", 0);
-	}
+        return $this->find("#$id", 0);
+    }
 
     public function getElementsById($id, $idx = NULL)
     {
-		return $this->find("#$id", $idx);
-	}
+        return $this->find("#$id", $idx);
+    }
 
     public function getElementByTagName($name)
     {
-		return $this->find($name, 0);
-	}
+        return $this->find($name, 0);
+    }
 
     public function getElementsByTagName($name, $idx = NULL)
     {
-		return $this->find($name, $idx);
-	}
+        return $this->find($name, $idx);
+    }
 
     public function parentNode()
     {
-		return $this->parent();
-	}
+        return $this->parent();
+    }
 
     public function childNodes($idx = -1)
     {
-		return $this->children($idx);
-	}
-
-    public function firstChild()
-    {
-		return $this->first_child();
-	}
-
-    public function lastChild()
-    {
-		return $this->last_child();
-	}
-
-    public function nextSibling()
-    {
-		return $this->next_sibling();
-	}
-
-    public function previousSibling()
-    {
-		return $this->prev_sibling();
-	}
+        return $this->children($idx);
+    }
 }
 
 /**
@@ -681,13 +661,12 @@ class Html_Dom_Node
  */
 class Html_Dom
 {
-	/**
-	 * The root node of the document
-	 *
-	 * @var Html_Dom_Node
-	 */
+    /**
+     * The root node of the document
+     *
+     * @var Html_Dom_Node
+     */
     public $root = NULL;
-
     public $nodes = array();
     public $callback = NULL;
     public $lowercase = false;
@@ -702,7 +681,7 @@ class Html_Dom
     protected $token_equal = ' =/>';
     protected $token_slash = " />\r\n\t";
     protected $token_attr = ' >';
-    // use isset instead of in_array, performance boost about 30%...
+// use isset instead of in_array, performance boost about 30%...
     protected $self_closing_tags = array('img' => 1, 'br' => 1, 'input' => 1, 'meta' => 1, 'link' => 1, 'hr' => 1, 'base' => 1, 'embed' => 1, 'spacer' => 1);
     protected $block_tags = array('root' => 1, 'body' => 1, 'form' => 1, 'div' => 1, 'span' => 1, 'table' => 1);
     protected $optional_closing_tags = array(
@@ -717,14 +696,13 @@ class Html_Dom
         'nobr' => array('nobr' => 1),
     );
 
-
-	/**
-	 * Constructor
-	 *
-	 * Create a DOM document object from the optionally given file or string
-	 *
-	 * @var string $str  The filename of a file or a string to be parsed
-	 */
+    /**
+     * Constructor
+     *
+     * Create a DOM document object from the optionally given file or string
+     *
+     * @var string $str  The filename of a file or a string to be parsed
+     */
     public function __construct($str = NULL)
     {
         if ($str)
@@ -741,36 +719,37 @@ class Html_Dom
         $this->clear();
     }
 
-    // load html from string
+// load html from string
     public function load($str, $lowercase = true)
     {
-        // prepare
+// prepare
         $this->prepare($str, $lowercase);
-        // strip out comments
+// strip out comments
         $this->remove_noise("'<!--(.*?)-->'is");
-        // strip out cdata
+// strip out cdata
         $this->remove_noise("'<!\[CDATA\[(.*?)\]\]>'is", true);
-        // strip out <style> tags
+// strip out <style> tags
         $this->remove_noise("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is");
         $this->remove_noise("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is");
-        // strip out <script> tags
+// strip out <script> tags
         $this->remove_noise("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is");
         $this->remove_noise("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is");
-        // strip out preformatted tags
+// strip out preformatted tags
         $this->remove_noise("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is");
-        // strip out server side scripts
+// strip out server side scripts
         $this->remove_noise("'(<\?)(.*?)(\?>)'s", true);
-        // strip smarty scripts
+// strip smarty scripts
         $this->remove_noise("'(\{\w)(.*?)(\})'s", true);
 
-        // parsing
-        while ($this->parse());
-        
-		// end
+// parsing
+        while ($this->parse()
+            );
+
+// end
         $this->root->_[HDOM_INFO_END] = $this->cursor;
     }
 
-    // load html from file
+// load html from file
     public function load_file()
     {
         $args = func_get_args();
@@ -779,19 +758,19 @@ class Html_Dom
             throw new Exception($error['message']);
     }
 
-    // set callback function
+// set callback function
     public function set_callback($function_name)
     {
         $this->callback = $function_name;
     }
 
-    // remove callback function
+// remove callback function
     public function remove_callback()
     {
         $this->callback = NULL;
     }
 
-    // save dom as string
+// save dom as string
     public function save($filepath = '')
     {
         $ret = $this->root->innertext();
@@ -800,30 +779,30 @@ class Html_Dom
         return $ret;
     }
 
-    // find dom node by css selector
+// find dom node by css selector
     public function find($selector, $idx = NULL)
     {
         return $this->root->find($selector, $idx);
     }
 
-    // clean up memory due to php5 circular references memory leak...
+// clean up memory due to php5 circular references memory leak...
     public function clear()
     {
         foreach ($this->nodes as $n)
         {
-			$n->clear();
-			$n = NULL;
-		}
+            $n->clear();
+            $n = NULL;
+        }
         if (isset($this->parent))
         {
-			$this->parent->clear();
-			unset($this->parent);
-		}
+            $this->parent->clear();
+            unset($this->parent);
+        }
         if (isset($this->root))
         {
-			$this->root->clear();
-			unset($this->root);
-		}
+            $this->root->clear();
+            unset($this->root);
+        }
         unset($this->doc);
         unset($this->noise);
     }
@@ -833,7 +812,7 @@ class Html_Dom
         $this->root->dump($show_attr);
     }
 
-    // prepare HTML data and init everything
+// prepare HTML data and init everything
     protected function prepare($str, $lowercase = true)
     {
         $this->clear();
@@ -848,19 +827,19 @@ class Html_Dom
         $this->root->_[HDOM_INFO_BEGIN] = -1;
         $this->root->nodetype = HDOM_TYPE_ROOT;
         $this->parent = $this->root;
-        // set the length of content
+// set the length of content
         $this->size = strlen($str);
         if ($this->size > 0)
             $this->char = $this->doc[0];
     }
 
-    // parse html content
+// parse html content
     protected function parse()
     {
         if (($s = $this->copy_until_char('<')) === '')
             return $this->read_tag();
 
-        // text
+// text
         $node = new Html_Dom_Node($this);
         ++$this->cursor;
         $node->_[HDOM_INFO_TEXT] = $s;
@@ -868,7 +847,7 @@ class Html_Dom
         return true;
     }
 
-    // read tag info
+// read tag info
     protected function read_tag()
     {
         if ($this->char !== '<')
@@ -878,14 +857,14 @@ class Html_Dom
         }
         $begin_tag_pos = $this->pos;
         $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
-        // end tag
+// end tag
         if ($this->char === '/')
         {
             $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
             $this->skip($this->token_blank);
             $tag = $this->copy_until_char('>');
 
-            // skip attributes in end tag
+// skip attributes in end tag
             if (($pos = strpos($tag, ' ')) !== false)
                 $tag = substr($tag, 0, $pos);
 
@@ -947,7 +926,7 @@ class Html_Dom
         ++$this->cursor;
         $tag = $this->copy_until($this->token_slash);
 
-        // doctype, cdata & comments...
+// doctype, cdata & comments...
         if (isset($tag[0]) && $tag[0] === '!')
         {
             $node->_[HDOM_INFO_TEXT] = '<' . $tag . $this->copy_until_char('>');
@@ -969,7 +948,7 @@ class Html_Dom
             return true;
         }
 
-        // text
+// text
         if ($pos = strpos($tag, '<') !== false)
         {
             $tag = '<' . substr($tag, 0, -1);
@@ -995,12 +974,12 @@ class Html_Dom
             return true;
         }
 
-        // begin tag
+// begin tag
         $node->nodetype = HDOM_TYPE_ELEMENT;
         $tag_lower = strtolower($tag);
         $node->tag = ($this->lowercase) ? $tag_lower : $tag;
 
-        // handle optional closing tags
+// handle optional closing tags
         if (isset($this->optional_closing_tags[$tag_lower]))
         {
             while (isset($this->optional_closing_tags[$tag_lower][strtolower($this->parent->tag)]))
@@ -1014,7 +993,7 @@ class Html_Dom
         $guard = 0; // prevent infinity loop
         $space = array($this->copy_skip($this->token_blank), '', '');
 
-        // attributes
+// attributes
         do
         {
             if ($this->char !== NULL && $space[0] === '')
@@ -1027,7 +1006,7 @@ class Html_Dom
             }
             $guard = $this->pos;
 
-            // handle endless '<'
+// handle endless '<'
             if ($this->pos >= $this->size - 1 && $this->char !== '>')
             {
                 $node->nodetype = HDOM_TYPE_TEXT;
@@ -1038,7 +1017,7 @@ class Html_Dom
                 return true;
             }
 
-            // handle mismatch '<'
+// handle mismatch '<'
             if ($this->doc[$this->pos - 1]=='<')
             {
                 $node->nodetype = HDOM_TYPE_TEXT;
@@ -1064,7 +1043,7 @@ class Html_Dom
                     $this->parse_attr($node, $name, $space);
                 } else
                 {
-                    //no value attr: nowrap, checked selected...
+//no value attr: nowrap, checked selected...
                     $node->_[HDOM_INFO_QUOTE][] = HDOM_QUOTE_NO;
                     $node->attr[$name] = true;
                     if ($this->char != '>')
@@ -1080,14 +1059,14 @@ class Html_Dom
         $this->link_nodes($node, true);
         $node->_[HDOM_INFO_ENDSPACE] = $space[0];
 
-        // check self closing
+// check self closing
         if ($this->copy_until_char_escape('>') === '/')
         {
             $node->_[HDOM_INFO_ENDSPACE] .= '/';
             $node->_[HDOM_INFO_END] = 0;
         } else
         {
-            // reset parent
+// reset parent
             if (!isset($this->self_closing_tags[strtolower($node->tag)]))
                 $this->parent = $node;
         }
@@ -1095,7 +1074,7 @@ class Html_Dom
         return true;
     }
 
-    // parse attributes
+// parse attributes
     protected function parse_attr($node, $name, &$space)
     {
         $space[2] = $this->copy_skip($this->token_blank);
@@ -1119,7 +1098,7 @@ class Html_Dom
         }
     }
 
-    // link node's parent
+// link node's parent
     protected function link_nodes(&$node, $is_child)
     {
         $node->parent = $this->parent;
@@ -1128,7 +1107,7 @@ class Html_Dom
             $this->parent->children[] = $node;
     }
 
-    // as a text node
+// as a text node
     protected function as_text_node($tag)
     {
         $node = new Html_Dom_Node($this);
@@ -1218,7 +1197,7 @@ class Html_Dom
         }
     }
 
-    // remove noise from html content
+// remove noise from html content
     protected function remove_noise($pattern, $remove_tag=false)
     {
         $count = preg_match_all($pattern, $this->doc, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
@@ -1231,13 +1210,13 @@ class Html_Dom
             $this->doc = substr_replace($this->doc, $key, $matches[$i][$idx][1], strlen($matches[$i][$idx][0]));
         }
 
-        // reset the length of content
+// reset the length of content
         $this->size = strlen($this->doc);
         if ($this->size > 0)
             $this->char = $this->doc[0];
     }
 
-    // restore noise to html content
+// restore noise to html content
     public function restore_noise($text)
     {
         while (($pos = strpos($text, '___noise___'))!==false)
@@ -1264,7 +1243,7 @@ class Html_Dom
         }
     }
 
-    // camel naming conventions
+// camel naming conventions
     public function childNodes($idx=-1)
     {
         return $this->root->childNodes($idx);
