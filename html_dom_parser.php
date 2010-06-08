@@ -125,7 +125,11 @@ class Html_Dom_Node
         return $this->outertext();
     }
 
-// clean up memory due to php5 circular references memory leak...
+	/**
+	 * Clean up memory
+	 *
+	 * This is necessary due to the circular references memory leak in PHP 5.
+	 */
     public function clear()
     {
         $this->dom = NULL;
@@ -134,7 +138,12 @@ class Html_Dom_Node
         $this->children = NULL;
     }
 
-// dump node's tree
+	/**
+	 * Dump the node's tree
+	 *
+	 * @param bool $show_attr
+	 * @param int $deep
+	 */
     public function dump($show_attr = true, $deep = 0)
     {
         $lead = str_repeat('    ', $deep);
@@ -153,35 +162,60 @@ class Html_Dom_Node
             $c->dump($show_attr, $deep + 1);
     }
 
-// returns the parent of node
+	/**
+	 * Get the parent of the node
+	 *
+	 * @return Html_Dom_Node
+	 */
     public function parent()
     {
         return $this->parent;
     }
 
-// returns children of node
-    public function children($idx = -1)
+	/**
+	 * Return all children of the node
+	 *
+	 * @return array
+	 */
+    public function getChildren()
     {
-        if ($idx === - 1)
-            return $this->children;
-        if (isset($this->children[$idx]))
-            return $this->children[$idx];
-        return NULL;
+		return $this->children;
     }
 
-// returns the first child of node
-    public function firstChild()
+	/**
+	 * Return the specified child of the node
+	 *
+	 * @param int $idx
+	 * @return Html_Dom_Node|null
+	 */
+	public function getChild($idx)
+	{
+		if (isset($this->children[$idx]))
+			return $this->children[$idx];
+
+		return NULL;
+	}
+
+	/**
+	 * Get the first child of the node
+	 *
+	 * @return Html_Dom_Node|null
+	 */
+    public function getFirstChild()
     {
-        if (count($this->children) > 0)
-            return $this->children[0];
-        return NULL;
+		return $this->getChild(0);
     }
 
-// returns the last child of node
-    public function lastChild()
+	/**
+	 * Get the last child of the node
+	 *
+	 * @return Html_Dom_Node|null
+	 */
+    public function getLastChild()
     {
         if (($count = count($this->children)) > 0)
-            return $this->children[$count - 1];
+            return $this->getChild[$count - 1];
+		
         return NULL;
     }
 
@@ -652,11 +686,6 @@ class Html_Dom_Node
     public function parentNode()
     {
         return $this->parent();
-    }
-
-    public function childNodes($idx = -1)
-    {
-        return $this->children($idx);
     }
 }
 
@@ -1250,11 +1279,15 @@ class Html_Dom
         }
     }
 
-// camel naming conventions
-    public function childNodes($idx=-1)
-    {
-        return $this->root->childNodes($idx);
-    }
+	public function getChild($idx)
+	{
+		return $this->root->getChild($idx);
+	}
+
+	public function getChildren()
+	{
+		return $this->root->getChildren();
+	}
 
     public function firstChild()
     {
