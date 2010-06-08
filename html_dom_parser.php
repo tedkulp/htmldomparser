@@ -93,6 +93,13 @@ function str_get_dom($str, $lowercase = true)
  */
 class Html_Dom_Node
 {
+	const TYPE_ELEMENT = 1;
+	const TYPE_COMMENT = 2;
+	const TYPE_TEXT = 3;
+	const TYPE_ENDTAG = 4;
+	const TYPE_ROOT = 5;
+	const TYPE_UNKNOWN = 6;
+	
     public $nodetype = HDOM_TYPE_TEXT;
     public $tag = 'text';
     public $attr = array();
