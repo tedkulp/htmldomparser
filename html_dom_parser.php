@@ -122,7 +122,7 @@ class Html_Dom_Node
 
     public function __toString()
     {
-        return $this->outertext();
+        return $this->getOuterText();
     }
 
 	/**
@@ -167,7 +167,7 @@ class Html_Dom_Node
 	 *
 	 * @return Html_Dom_Node
 	 */
-    public function parent()
+    public function getParent()
     {
         return $this->parent;
     }
@@ -220,7 +220,7 @@ class Html_Dom_Node
     }
 
 // returns the next sibling of node
-    public function nextSibling()
+    public function getNextSibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -234,7 +234,7 @@ class Html_Dom_Node
     }
 
 // returns the previous sibling of node
-    public function prevSibling()
+    public function getPrevSibling()
     {
         if ($this->parent === NULL)
             return NULL;
@@ -248,24 +248,24 @@ class Html_Dom_Node
     }
 
 // get dom node's inner html
-    public function innerText()
+    public function getInnerText()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
             return $this->_[HDOM_INFO_INNER];
         if (isset($this->_[HDOM_INFO_TEXT]))
-            return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
+            return $this->dom->restoreNoise($this->_[HDOM_INFO_TEXT]);
 
         $ret = '';
         foreach ($this->nodes as $n)
-            $ret .= $n->outertext();
+            $ret .= $n->getOuterText();
         return $ret;
     }
 
 // get dom node's outer text (with tag)
-    public function outerText()
+    public function getOuterText()
     {
         if ($this->tag === 'root')
-            return $this->innertext();
+            return $this->getInnerText();
 
 // trigger callback
         if ($this->dom->callback !== NULL)
@@ -274,7 +274,7 @@ class Html_Dom_Node
         if (isset($this->_[HDOM_INFO_OUTER]))
             return $this->_[HDOM_INFO_OUTER];
         if (isset($this->_[HDOM_INFO_TEXT]))
-            return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
+            return $this->dom->restoreNoise($this->_[HDOM_INFO_TEXT]);
 
 // render begin tag
         $ret = $this->dom->nodes[$this->_[HDOM_INFO_BEGIN]]->makeup();
@@ -285,7 +285,7 @@ class Html_Dom_Node
         else
         {
             foreach ($this->nodes as $n)
-                $ret .= $n->outertext();
+                $ret .= $n->getOuterText();
         }
 
 // render end tag
@@ -295,13 +295,13 @@ class Html_Dom_Node
     }
 
 // get dom node's plain text
-    public function text()
+    public function getText()
     {
         if (isset($this->_[HDOM_INFO_INNER]))
             return $this->_[HDOM_INFO_INNER];
         switch ($this->nodetype)
         {
-            case HDOM_TYPE_TEXT: return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
+            case HDOM_TYPE_TEXT: return $this->dom->restoreNoise($this->_[HDOM_INFO_TEXT]);
             case HDOM_TYPE_COMMENT: return '';
             case HDOM_TYPE_UNKNOWN: return '';
         }
@@ -316,9 +316,9 @@ class Html_Dom_Node
         return $ret;
     }
 
-    public function xmlText()
+    public function getXmlText()
     {
-        $ret = $this->innertext();
+        $ret = $this->getInnerText();
         $ret = str_ireplace('<![CDATA[', '', $ret);
         $ret = str_replace(']]>', '', $ret);
         return $ret;
@@ -329,7 +329,7 @@ class Html_Dom_Node
     {
 // text, comment, unknown
         if (isset($this->_[HDOM_INFO_TEXT]))
-            return $this->dom->restore_noise($this->_[HDOM_INFO_TEXT]);
+            return $this->dom->restoreNoise($this->_[HDOM_INFO_TEXT]);
 
         $ret = '<' . $this->tag;
         $i = -1;
@@ -357,14 +357,14 @@ class Html_Dom_Node
                 $ret .= $key . $this->_[HDOM_INFO_SPACE][$i][1] . '=' . $this->_[HDOM_INFO_SPACE][$i][2] . $quote . $val . $quote;
             }
         }
-        $ret = $this->dom->restore_noise($ret);
+        $ret = $this->dom->restoreNoise($ret);
         return $ret . $this->_[HDOM_INFO_ENDSPACE] . '>';
     }
 
 // find elements by css selector
     public function find($selector, $idx = NULL)
     {
-        $selectors = $this->parse_selector($selector);
+        $selectors = $this->parseSelector($selector);
         if (($count = count($selectors)) === 0)
             return array();
         $found_keys = array();
@@ -593,10 +593,10 @@ class Html_Dom_Node
             return $this->attr[$name];
         switch ($name)
         {
-            case 'outertext': return $this->outertext();
-            case 'innertext': return $this->innertext();
-            case 'plaintext': return $this->text();
-            case 'xmltext': return $this->xmltext();
+            case 'outertext': return $this->getOuterText();
+            case 'innertext': return $this->getInnerText();
+            case 'plaintext': return $this->getText();
+            case 'xmltext': return $this->getXmlText();
             default: return array_key_exists($name, $this->attr);
         }
     }
@@ -685,7 +685,7 @@ class Html_Dom_Node
 
     public function parentNode()
     {
-        return $this->parent();
+        return $this->getParent();
     }
 }
 
@@ -744,7 +744,7 @@ class Html_Dom
         if ($str)
         {
             if (preg_match("/^http:\/\//i", $str) || is_file($str))
-                $this->load_file($str);
+                $this->loadFile($str);
             else
                 $this->load($str);
         }
@@ -786,7 +786,7 @@ class Html_Dom
     }
 
 	// load html from file
-    public function load_file()
+    public function loadFile()
     {
         $args = func_get_args();
         @$this->load(call_user_func_array('file_get_contents', $args), true);
@@ -795,13 +795,13 @@ class Html_Dom
     }
 
 	// set callback function
-    public function set_callback($function_name)
+    public function setCallback($function_name)
     {
         $this->callback = $function_name;
     }
 
 	// remove callback function
-    public function remove_callback()
+    public function removeCallback()
     {
         $this->callback = NULL;
     }
@@ -809,7 +809,7 @@ class Html_Dom
 	// save dom as string
     public function save($filepath = '')
     {
-        $ret = $this->root->innertext();
+        $ret = $this->root->getInnerText();
         if ($filepath !== '')
             file_put_contents($filepath, $ret, LOCK_EX);
         return $ret;
@@ -872,19 +872,19 @@ class Html_Dom
 	// parse html content
     protected function parse()
     {
-        if (($s = $this->copy_until_char('<')) === '')
-            return $this->read_tag();
+        if (($s = $this->copyUntilChar('<')) === '')
+            return $this->readTag();
 
 		// text
         $node = new Html_Dom_Node($this);
         ++$this->cursor;
         $node->_[HDOM_INFO_TEXT] = $s;
-        $this->link_nodes($node, false);
+        $this->linkNodes($node, false);
         return true;
     }
 
 	// read tag info
-    protected function read_tag()
+    protected function readTag()
     {
         if ($this->char !== '<')
         {
@@ -898,7 +898,7 @@ class Html_Dom
         {
             $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
             $this->skip($this->token_blank);
-            $tag = $this->copy_until_char('>');
+            $tag = $this->copyUntilChar('>');
 
 			// skip attributes in end tag
             if (($pos = strpos($tag, ' ')) !== false)
@@ -938,7 +938,7 @@ class Html_Dom
                     {
                         $this->parent = $org_parent; // restore origonal parent
                         $this->parent->_[HDOM_INFO_END] = $this->cursor;
-                        return $this->as_text_node($tag);
+                        return $this->asTextNode($tag);
                     }
                 } else if (($this->parent->parent) && strtolower($this->parent->parent->tag) === $tag_lower)
                 {
@@ -946,7 +946,7 @@ class Html_Dom
                     $this->parent = $this->parent->parent;
                 }
                 else
-                    return $this->as_text_node($tag);
+                    return $this->asTextNode($tag);
             }
 
             $this->parent->_[HDOM_INFO_END] = $this->cursor;
@@ -960,12 +960,12 @@ class Html_Dom
         $node = new Html_Dom_Node($this);
         $node->_[HDOM_INFO_BEGIN] = $this->cursor;
         ++$this->cursor;
-        $tag = $this->copy_until($this->token_slash);
+        $tag = $this->copyUntil($this->token_slash);
 
 		// doctype, cdata & comments...
         if (isset($tag[0]) && $tag[0] === '!')
         {
-            $node->_[HDOM_INFO_TEXT] = '<' . $tag . $this->copy_until_char('>');
+            $node->_[HDOM_INFO_TEXT] = '<' . $tag . $this->copyUntilChar('>');
 
             if (isset($tag[2]) && $tag[1] === '-' && $tag[2] === '-')
             {
@@ -979,7 +979,7 @@ class Html_Dom
 
             if ($this->char === '>')
                 $node->_[HDOM_INFO_TEXT] .= '>';
-            $this->link_nodes($node, true);
+            $this->linkNodes($node, true);
             $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
             return true;
         }
@@ -989,23 +989,23 @@ class Html_Dom
         {
             $tag = '<' . substr($tag, 0, -1);
             $node->_[HDOM_INFO_TEXT] = $tag;
-            $this->link_nodes($node, false);
+            $this->linkNodes($node, false);
             $this->char = $this->doc[--$this->pos]; // prev
             return true;
         }
 
         if (!preg_match("/^[\w-:]+$/", $tag))
         {
-            $node->_[HDOM_INFO_TEXT] = '<' . $tag . $this->copy_until('<>');
+            $node->_[HDOM_INFO_TEXT] = '<' . $tag . $this->copyUntil('<>');
             if ($this->char === '<')
             {
-                $this->link_nodes($node, false);
+                $this->linkNodes($node, false);
                 return true;
             }
 
             if ($this->char === '>')
                 $node->_[HDOM_INFO_TEXT] .= '>';
-            $this->link_nodes($node, false);
+            $this->linkNodes($node, false);
             $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
             return true;
         }
@@ -1027,14 +1027,14 @@ class Html_Dom
         }
 
         $guard = 0; // prevent infinity loop
-        $space = array($this->copy_skip($this->token_blank), '', '');
+        $space = array($this->copySkip($this->token_blank), '', '');
 
 		// attributes
         do
         {
             if ($this->char !== NULL && $space[0] === '')
                 break;
-            $name = $this->copy_until($this->token_equal);
+            $name = $this->copyUntil($this->token_equal);
             if ($guard === $this->pos)
             {
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
@@ -1049,7 +1049,7 @@ class Html_Dom
                 $node->_[HDOM_INFO_END] = 0;
                 $node->_[HDOM_INFO_TEXT] = '<' . $tag . $space[0] . $name;
                 $node->tag = 'text';
-                $this->link_nodes($node, false);
+                $this->linkNodes($node, false);
                 return true;
             }
 
@@ -1063,20 +1063,20 @@ class Html_Dom
                 $node->_[HDOM_INFO_TEXT] = substr($this->doc, $begin_tag_pos, $this->pos - $begin_tag_pos - 1);
                 $this->pos -= 2;
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
-                $this->link_nodes($node, false);
+                $this->linkNodes($node, false);
                 return true;
             }
 
             if ($name !== '/' && $name !== '')
             {
-                $space[1] = $this->copy_skip($this->token_blank);
-                $name = $this->restore_noise($name);
+                $space[1] = $this->copySkip($this->token_blank);
+                $name = $this->restoreNoise($name);
                 if ($this->lowercase)
                     $name = strtolower($name);
                 if ($this->char === '=')
                 {
                     $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
-                    $this->parse_attr($node, $name, $space);
+                    $this->parseAttr($node, $name, $space);
                 } else
                 {
 					//no value attr: nowrap, checked selected...
@@ -1086,17 +1086,17 @@ class Html_Dom
                         $this->char = $this->doc[--$this->pos]; // prev
                 }
                 $node->_[HDOM_INFO_SPACE][] = $space;
-                $space = array($this->copy_skip($this->token_blank), '', '');
+                $space = array($this->copySkip($this->token_blank), '', '');
             }
             else
                 break;
         } while ($this->char !== '>' && $this->char !== '/');
 
-        $this->link_nodes($node, true);
+        $this->linkNodes($node, true);
         $node->_[HDOM_INFO_ENDSPACE] = $space[0];
 
 		// check self closing
-        if ($this->copy_until_char_escape('>') === '/')
+        if ($this->copyUntilCharEscape('>') === '/')
         {
             $node->_[HDOM_INFO_ENDSPACE] .= '/';
             $node->_[HDOM_INFO_END] = 0;
@@ -1111,31 +1111,31 @@ class Html_Dom
     }
 
 	// parse attributes
-    protected function parse_attr($node, $name, &$space)
+    protected function parseAttr($node, $name, &$space)
     {
-        $space[2] = $this->copy_skip($this->token_blank);
+        $space[2] = $this->copySkip($this->token_blank);
         switch ($this->char)
         {
             case '"':
                 $node->_[HDOM_INFO_QUOTE][] = HDOM_QUOTE_DOUBLE;
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
-                $node->attr[$name] = $this->restore_noise($this->copy_until_char_escape('"'));
+                $node->attr[$name] = $this->restoreNoise($this->copyUntilCharEscape('"'));
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
                 break;
             case '\'':
                 $node->_[HDOM_INFO_QUOTE][] = HDOM_QUOTE_SINGLE;
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
-                $node->attr[$name] = $this->restore_noise($this->copy_until_char_escape('\''));
+                $node->attr[$name] = $this->restoreNoise($this->copyUntilCharEscape('\''));
                 $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
                 break;
             default:
                 $node->_[HDOM_INFO_QUOTE][] = HDOM_QUOTE_NO;
-                $node->attr[$name] = $this->restore_noise($this->copy_until($this->token_attr));
+                $node->attr[$name] = $this->restoreNoise($this->copyUntil($this->token_attr));
         }
     }
 
 	// link node's parent
-    protected function link_nodes(&$node, $is_child)
+    protected function linkNodes(&$node, $is_child)
     {
         $node->parent = $this->parent;
         $this->parent->nodes[] = $node;
@@ -1144,12 +1144,12 @@ class Html_Dom
     }
 
 	// as a text node
-    protected function as_text_node($tag)
+    protected function asTextNode($tag)
     {
         $node = new Html_Dom_Node($this);
         ++$this->cursor;
         $node->_[HDOM_INFO_TEXT] = '</' . $tag . '>';
-        $this->link_nodes($node, false);
+        $this->linkNodes($node, false);
         $this->char = (++$this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
         return true;
     }
@@ -1160,7 +1160,7 @@ class Html_Dom
         $this->char = ($this->pos < $this->size) ? $this->doc[$this->pos] : NULL; // next
     }
 
-    protected function copy_skip($chars)
+    protected function copySkip($chars)
     {
         $pos = $this->pos;
         $len = strspn($this->doc, $chars, $pos);
@@ -1171,7 +1171,7 @@ class Html_Dom
         return substr($this->doc, $pos, $len);
     }
 
-    protected function copy_until($chars)
+    protected function copyUntil($chars)
     {
         $pos = $this->pos;
         $len = strcspn($this->doc, $chars, $pos);
@@ -1180,7 +1180,7 @@ class Html_Dom
         return substr($this->doc, $pos, $len);
     }
 
-    protected function copy_until_char($char)
+    protected function copyUntilChar($char)
     {
         if ($this->char === NULL)
             return '';
@@ -1201,7 +1201,7 @@ class Html_Dom
         return substr($this->doc, $pos_old, $pos - $pos_old);
     }
 
-    protected function copy_until_char_escape($char)
+    protected function copyUntilCharEscape($char)
     {
         if ($this->char === NULL)
             return '';
@@ -1234,7 +1234,7 @@ class Html_Dom
     }
 
 	// remove noise from html content
-	protected function remove_noise($pattern, $remove_tag=false)
+	protected function removeNoise($pattern, $remove_tag=false)
     {
         $count = preg_match_all($pattern, $this->doc, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
@@ -1253,7 +1253,7 @@ class Html_Dom
     }
 
 	// restore noise to html content
-    public function restore_noise($text)
+    public function restoreNoise($text)
     {
         while (($pos = strpos($text, '___noise___'))!==false)
         {
@@ -1266,16 +1266,16 @@ class Html_Dom
 
     public function __toString()
     {
-        return $this->root->innertext();
+        return $this->root->getInnerText();
     }
 
     public function __get($name)
     {
         switch ($name)
         {
-            case 'outertext': return $this->root->innertext();
-            case 'innertext': return $this->root->innertext();
-            case 'plaintext': return $this->root->text();
+            case 'outertext': return $this->root->getInnerText();
+            case 'innertext': return $this->root->getInnerText();
+            case 'plaintext': return $this->root->getText();
         }
     }
 
@@ -1289,14 +1289,14 @@ class Html_Dom
 		return $this->root->getChildren();
 	}
 
-    public function firstChild()
+    public function getFirstChild()
     {
-        return $this->root->first_child();
+        return $this->root->getFirstChild();
     }
 
-    public function lastChild()
+    public function getLastChild()
     {
-        return $this->root->last_child();
+        return $this->root->getLastChild();
     }
 
     public function getElementById($id)
