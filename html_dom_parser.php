@@ -761,21 +761,21 @@ class Html_Dom
 		// prepare
         $this->prepare($str, $lowercase);
 		// strip out comments
-        $this->remove_noise("'<!--(.*?)-->'is");
+        $this->removeNoise("'<!--(.*?)-->'is");
 		// strip out cdata
-        $this->remove_noise("'<!\[CDATA\[(.*?)\]\]>'is", true);
+        $this->removeNoise("'<!\[CDATA\[(.*?)\]\]>'is", true);
 		// strip out <style> tags
-        $this->remove_noise("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is");
-        $this->remove_noise("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is");
+        $this->removeNoise("'<\s*style[^>]*[^/]>(.*?)<\s*/\s*style\s*>'is");
+        $this->removeNoise("'<\s*style\s*>(.*?)<\s*/\s*style\s*>'is");
 		// strip out <script> tags
-        $this->remove_noise("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is");
-        $this->remove_noise("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is");
+        $this->removeNoise("'<\s*script[^>]*[^/]>(.*?)<\s*/\s*script\s*>'is");
+        $this->removeNoise("'<\s*script\s*>(.*?)<\s*/\s*script\s*>'is");
 		// strip out preformatted tags
-        $this->remove_noise("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is");
+        $this->removeNoise("'<\s*(?:code)[^>]*>(.*?)<\s*/\s*(?:code)\s*>'is");
 		// strip out server side scripts
-        $this->remove_noise("'(<\?)(.*?)(\?>)'s", true);
+        $this->removeNoise("'(<\?)(.*?)(\?>)'s", true);
 		// strip smarty scripts
-        $this->remove_noise("'(\{\w)(.*?)(\})'s", true);
+        $this->removeNoise("'(\{\w)(.*?)(\})'s", true);
 
 		// parsing
         while ($this->parse()
