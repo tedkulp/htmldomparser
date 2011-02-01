@@ -1318,15 +1318,6 @@ class Html_Dom
     {
         return $this->find($name, $idx);
     }
-
-    public function loadFile()
-    {
-        $args = func_get_args();
-        @$this->load(call_user_func_array('file_get_contents', $args), true);
-
-        if (($error = error_get_last()) !== NULL)
-            throw new Exception($error['message']);
-    }
 }
 
 ?>
