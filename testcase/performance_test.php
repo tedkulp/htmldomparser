@@ -2,7 +2,7 @@
 // $Rev$
 error_reporting(E_ALL);
 
-include_once('../simple_html_dom.php');
+include_once('../html_dom_parser.php');
 
 $all = 0;
 $min = 10000;
@@ -10,7 +10,7 @@ $max = 0;
 $count = 20;
 
 $str = file_get_contents('./html/google.htm');
-$html = new simple_html_dom;
+$html = new Html_Dom;
 
 for ($i=0; $i<$count; ++$i) {
     $start = microtime();

@@ -3,8 +3,8 @@
 // -----------------------------------------------------------------------------
 // setup
 error_reporting(E_ALL);
-require_once('../simple_html_dom.php');
-$html = new simple_html_dom;
+require_once('../html_dom_parser.php');
+$html = new Html_Dom;
 
 // -----------------------------------------------------------------------------
 // DOM tree test

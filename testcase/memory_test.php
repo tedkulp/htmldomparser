@@ -1,7 +1,7 @@
 <?php
 // $Rev$
 error_reporting(E_ALL);
-include_once('../simple_html_dom.php');
+include_once('../html_dom_parser.php');
 
 // -----------------------------------------------------------------------------
 function dump_memory($init_size) {
@@ -76,7 +76,7 @@ function test_multi_objects_file_get_html_clear_memory($filename) {
 echo '<br><br>[one object]<br>init memory: '.number_format(memory_get_usage(), 0, '.', ',').'<br>';
 echo '------------------------------------------<br>';
 flush();
-$html = new simple_html_dom;
+$html = new Html_Dom;
 for($i=0; $i<3; ++$i) {
     $html->load_file($filename);
     $html->clear();
