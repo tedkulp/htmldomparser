@@ -18,7 +18,7 @@ function callback_1($e) {
 }
 
 $dom->load($str);
-$dom->set_callback('callback_1');
+$dom->setCallback('callback_1');
 assert($dom=='<p>foo</p>');
 
 // -----------------------------------------------
@@ -29,7 +29,7 @@ function callback_2($e) {
 }
 
 $dom->load($str);
-$dom->set_callback('callback_2');
+$dom->setCallback('callback_2');
 assert($dom=='<img src="src0"><p>bar</p><img src="src2">');
 
 // -----------------------------------------------
@@ -40,7 +40,7 @@ function callback_3($e) {
 }
 
 $dom->load($str);
-$dom->set_callback('callback_3');
+$dom->setCallback('callback_3');
 assert($dom=='<img src="foo"><p>foo</p><img src="foo">');
 
 function callback_4($e) {
@@ -48,7 +48,7 @@ function callback_4($e) {
         $e->id = 'foo';
 }
 
-$dom->set_callback('callback_4');
+$dom->setCallback('callback_4');
 assert($dom=='<img src="foo" id="foo"><p>foo</p><img src="foo" id="foo">');
 
 // -----------------------------------------------
@@ -64,7 +64,7 @@ function callback_5($e) {
         unset($e->id);
 }
 
-$dom->set_callback('callback_5');
+$dom->setCallback('callback_5');
 assert($dom==$str);
 
 // -----------------------------------------------------------------------------
