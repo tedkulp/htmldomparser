@@ -312,7 +312,7 @@ class Html_Dom_Node
 
         $ret = '';
         foreach ($this->nodes as $n)
-            $ret .= $n->text();
+            $ret .= $n->getText();
         return $ret;
     }
 
