@@ -10,19 +10,19 @@ $html = new Html_Dom;
 // DOM tree test
 $html->load('');
 $e = $html->root;
-assert($e->first_child()==null);
-assert($e->last_child()==null);
-assert($e->next_sibling()==null);
-assert($e->prev_sibling()==null);
+assert($e->getFirstChild()==null);
+assert($e->getLastChild()==null);
+assert($e->getNextSibling()==null);
+assert($e->getPrevSibling()==null);
 // -----------------------------------------------
 $str = '<div id="div1"></div>';
 $html->load($str);
 
 $e = $html->root;
-assert($e->first_child()->id=='div1');
-assert($e->last_child()->id=='div1');
-assert($e->next_sibling()==null);
-assert($e->prev_sibling()==null);
+assert($e->getFirstChild()->id=='div1');
+assert($e->getLastChild()->id=='div1');
+assert($e->getNextSibling()==null);
+assert($e->getPrevSibling()==null);
 assert($e->plaintext=='');
 assert($e->innertext=='<div id="div1"></div>');
 assert($e->outertext==$str);
@@ -40,10 +40,10 @@ assert($html==$str);
 $e = $html->find('div#div1', 0);
 assert(isset($e->id)==true);
 assert(isset($e->_not_exist)==false);
-assert($e->first_child()->id=='div10');
-assert($e->last_child()->id=='div12');
-assert($e->next_sibling()==null);
-assert($e->prev_sibling()==null);
+assert($e->getFirstChild()->id=='div10');
+assert($e->getLastChild()->id=='div12');
+assert($e->getNextSibling()==null);
+assert($e->getPrevSibling()==null);
 // -----------------------------------------------
 $str = <<<HTML
 <div id="div0">
@@ -60,20 +60,20 @@ $html->load($str);
 assert($html==$str);
 
 $e = $html->find('div#div1', 0);
-assert($e->first_child()->id=='div10');
-assert($e->last_child()->id=='div12');
-assert($e->next_sibling()->id=='div2');
-assert($e->prev_sibling()->id=='div0');
+assert($e->getFirstChild()->id=='div10');
+assert($e->getLastChild()->id=='div12');
+assert($e->getNextSibling()->id=='div2');
+assert($e->getPrevSibling()->id=='div0');
 
 $e = $html->find('div#div2', 0);
-assert($e->first_child()==null);
-assert($e->last_child()==null);
+assert($e->getFirstChild()==null);
+assert($e->getLastChild()==null);
 
 $e = $html->find('div#div0 div#div00', 0);
-assert($e->first_child()==null);
-assert($e->last_child()==null);
-assert($e->next_sibling()==null);
-assert($e->prev_sibling()==null);
+assert($e->getFirstChild()==null);
+assert($e->getLastChild()==null);
+assert($e->getNextSibling()==null);
+assert($e->getPrevSibling()==null);
 // -----------------------------------------------
 $str = <<<HTML
 <div id="div0">
@@ -303,9 +303,9 @@ $html->load($str);
 assert($html==$str);
 
 $e = $html->find('div#div1', 0);
-assert($e->firstChild()->getAttribute('id')=='div10');
-assert($e->lastChild()->getAttribute('id')=='div12');
-assert($e->nextSibling()==null);
+assert($e->getFirstChild()->getAttribute('id')=='div10');
+assert($e->getLastChild()->getAttribute('id')=='div12');
+assert($e->getNextSibling()==null);
 assert($e->previousSibling()==null);
 
 // -----------------------------------------------
@@ -358,7 +358,7 @@ HTML;
 $html->load($str);
 
 $ul = $html->find('ul', 0);
-assert($ul->first_child()->tag==='ul');
+assert($ul->getFirstChild()->tag==='ul');
 
 // -----------------------------------------------
 $str = <<<HTML
@@ -377,8 +377,8 @@ $html->load($str);
 assert($html==$str);
 
 $ul = $html->find('ul', 0);
-assert($ul->first_child()->tag==='li');
-assert($ul->first_child()->next_sibling()->tag==='li');
+assert($ul->getFirstChild()->tag==='li');
+assert($ul->getFirstChild()->getNextSibling()->tag==='li');
 // -----------------------------------------------------------------------------
 // tear down
 $html->clear();
