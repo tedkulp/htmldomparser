@@ -98,9 +98,9 @@ $html->load($str);
 assert($html==$str);
 
 assert($html->find("#div1", 0)->id=='div1');
-assert($html->find("#div1", 0)->children(0)->id=='div10');
-assert($html->find("#div1", 0)->children(1)->children(1)->id=='div111');
-assert($html->find("#div1", 0)->children(1)->children(1)->children(2)->id=='div1112');
+assert($html->find("#div1", 0)->getChildren(0)->id=='div10');
+assert($html->find("#div1", 0)->getChildren(1)->getChildren(1)->id=='div111');
+assert($html->find("#div1", 0)->getChildren(1)->getChildren(1)->getChildren(2)->id=='div1112');
 
 // -----------------------------------------------------------------------------
 // no value attr test
