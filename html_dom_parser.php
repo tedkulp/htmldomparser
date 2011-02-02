@@ -923,7 +923,7 @@ class Html_Dom
                         if ($this->parent->parent)
                             $this->parent = $this->parent->parent;
                         $this->parent->_[HDOM_INFO_END] = $this->cursor;
-                        return $this->as_text_node($tag);
+                        return $this->asTextNode($tag);
                     }
                 }
                 else if (($this->parent->parent) && isset($this->block_tags[$tag_lower]))
