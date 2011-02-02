@@ -4,10 +4,14 @@ require_once dirname(dirname(__FILE__)).'/html_dom_parser.php';
 
 class DomTest extends PHPUnit_Framework_TestCase
 {
+	protected $html;
+	
+	
 	public function setUp()
 	{
 		$this->html = new Html_Dom();
 	}
+	
 	
 	public function testEmptyDocument()
 	{

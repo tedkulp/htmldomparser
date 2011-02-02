@@ -6,44 +6,7 @@ require_once('../html_dom_parser.php');
 $dom = new Html_Dom;
 
 // -----------------------------------------------------------------------------
-// innertext test
-$str = <<<HTML
-<html>
-    <head></head>
-    <body>
-        <br>
-        <span>foo</span>
-    </body>
-</html>
-HTML;
-$dom->load($str);
-assert($dom==$str);
 // -----------------------------------------------
-$str = <<<HTML
-<html>
-    <head></head>
-    <body>
-        <br>
-        <span>bar</span>
-    </body>
-</html>
-HTML;
-$dom->load($str);
-$dom->find('span', 0)->innertext = 'bar';
-assert($dom==$str);
-// -----------------------------------------------
-$str = <<<HTML
-<html>
-    <head>ok</head>
-    <body>
-        <br>
-        <span>bar</span>
-    </body>
-</html>
-HTML;
-$dom->load($str);
-$dom->find('head', 0)->innertext = 'ok';
-assert($dom==$str);
 // -----------------------------------------------
 $str = <<<HTML
 <b>foo</b>
