@@ -90,4 +90,91 @@ HTML;
 		$this->assertNull($e->getNextSibling());
 		$this->assertNull($e->getPrevSibling());
 	}
+	
+	public function testVeryComplexNestedHtml()
+	{
+		$str = <<<HTML
+<div id="div0">
+    <div id="div00"></div>
+</div>
+<div id="div1">
+    <div id="div10"></div>
+    <div id="div11">
+        <div id="div110"></div>
+        <div id="div111">
+            <div id="div1110"></div>
+            <div id="div1111"></div>
+            <div id="div1112"></div>
+        </div>
+        <div id="div112"></div>
+    </div>
+    <div id="div12"></div>
+</div>
+<div id="div2"></div>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find("#div1", 0);
+		$this->assertEquals($e->id, 'div1');
+		$this->assertEquals($e->getChildren(0)->id, 'div10');
+		$this->assertEquals($e->getChildren(1)->getChildren(1)->id, 'div111');
+		$this->assertEquals($e->getChildren(1)->getChildren(1)->getChildren(2)->id, 'div1112');
+	}
+	
+	public function testAdvancedSelectors()
+	{
+		$str = <<<HTML
+<form name="form1" method="post" action="">
+    <input type="checkbox" name="checkbox0" checked value="checkbox0">aaa<br>
+    <input type="checkbox" name="checkbox1" value="checkbox1">bbb<br>
+    <input type="checkbox" name="checkbox2" value="checkbox2" checked>ccc<br>
+</form>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$counter = 0;
+		foreach ($this->html->find('input[type=checkbox]') as $checkbox) {
+			if (isset($checkbox->checked)) {
+				$this->assertEquals($checkbox->value, "checkbox$counter");
+				$counter += 2;
+			}
+		}
+		
+		$counter = 0;
+		foreach($this->html->find('input[type=checkbox]') as $checkbox) {
+			if ($checkbox->checked) {
+				$this->assertEquals($checkbox->value, "checkbox$counter");
+				$counter += 2;
+			}
+		}
+		
+		$es = $this->html->find('input[type=checkbox]');
+		$es[1]->checked = true;
+		$this->assertEquals($es[1]->outertext, '<input type="checkbox" name="checkbox1" value="checkbox1" checked>');
+		$es[0]->checked = false;
+		$this->assertEquals((string) $es[0], '<input type="checkbox" name="checkbox0" value="checkbox0">');
+		$es[0]->checked = true;
+		$this->assertEquals($es[0]->outertext, '<input type="checkbox" name="checkbox0" checked value="checkbox0">');
+	}
+
+	public function testRemoveAttribute()
+	{
+		$str = <<<HTML
+<input type="checkbox" name="checkbox0">
+<input type = "checkbox" name = 'checkbox1' value = "checkbox1">
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox0]', 0);
+		$e->name = null;
+		$this->assertEquals((string) $e, '<input type="checkbox">');
+		$e->type = null;
+		$this->assertEquals((string) $e, '<input>');
+	}
 }
