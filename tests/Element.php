@@ -215,15 +215,15 @@ HTML;
 		$e[1]->class = 'class_test';
 		$this->assertEquals($e[1]->outertext, '<div class="class_test">okok</div>');
 		$this->assertEquals($e[0]->outertext, '<div class="class0" id="id0" ><div class="class_test">okok</div></div>');
-		$this->assertEquals((string) $dom, '<div class="class0" id="id0" ><div class="class_test">okok</div></div>');
+		$this->assertEquals((string) $this->dom, '<div class="class0" id="id0" ><div class="class_test">okok</div></div>');
 		
 		$e[0]->class = 'class_test';
 		$this->assertEquals($e[0]->outertext, '<div class="class_test" id="id0" ><div class="class_test">okok</div></div>');
-		$this->assertEquals((string) $dom, '<div class="class_test" id="id0" ><div class="class_test">okok</div></div>');
+		$this->assertEquals((string) $this->dom, '<div class="class_test" id="id0" ><div class="class_test">okok</div></div>');
 		
 		$e[0]->innertext = 'okokok';
 		$this->assertEquals($e[0]->outertext, '<div class="class_test" id="id0" >okokok</div>');
-		$this->assertEquals((string) $dom, '<div class="class_test" id="id0" >okokok</div>');
+		$this->assertEquals((string) $this->dom, '<div class="class_test" id="id0" >okokok</div>');
 	}
 
 	public function testParagraphs()
