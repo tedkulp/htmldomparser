@@ -7,71 +7,13 @@ require_once('../html_dom_parser.php');
 $html = new Html_Dom;
 
 // -----------------------------------------------
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox0]', 0);
-$e->name = null;
-assert($e=='<input type="checkbox">');
-$e->type = null;
-assert($e=='<input>');
 
 // -----------------------------------------------
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox1]', 0);
-$e->value = null;
-assert($e=="<input type = \"checkbox\" name = 'checkbox1'>");
-$e->type = null;
-assert($e=="<input name = 'checkbox1'>");
-$e->name = null;
-assert($e=='<input>');
-
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox1]', 0);
-$e->type = null;
-assert($e=="<input name = 'checkbox1' value = \"checkbox1\">");
-$e->name = null;
-assert($e=='<input value = "checkbox1">');
-$e->value = null;
-assert($e=='<input>');
 
 // -----------------------------------------------------------------------------
 // remove no value attr test
-$str = <<<HTML
-<input type="checkbox" checked name='checkbox0'>
-<input type="checkbox" name='checkbox1' checked>
-HTML;
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox1]', 0);
-$e->type = NULL;
-assert($e=="<input name='checkbox1' checked>");
-$e->name = null;
-assert($e=="<input checked>");
-$e->checked = NULL;
-assert($e=="<input>");
 
 // -----------------------------------------------
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox0]', 0);
-$e->type = NULL;
-assert($e=="<input checked name='checkbox0'>");
-$e->name = NULL;
-assert($e=='<input checked>');
-$e->checked = NULL;
-assert($e=='<input>');
-
-$html->load($str);
-assert($html==$str);
-$e = $html->find('[name=checkbox0]', 0);
-$e->checked = NULL;
-assert($e=="<input type=\"checkbox\" name='checkbox0'>");
-$e->name = NULL;
-assert($e=='<input type="checkbox">');
-$e->type = NULL;
-assert($e=="<input>");
 
 // -----------------------------------------------------------------------------
 // extract text
@@ -234,6 +176,5 @@ assert($ul->getFirstChild()->tag==='li');
 assert($ul->getFirstChild()->getNextSibling()->tag==='li');
 // -----------------------------------------------------------------------------
 // tear down
-$html->clear();
-unset($html);
+
 ?>

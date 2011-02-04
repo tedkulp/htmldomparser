@@ -4,12 +4,21 @@ require_once dirname(dirname(__FILE__)).'/html_dom_parser.php';
 
 class DomTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var Html_Dom
+	 */
 	protected $html;
 	
 	
 	public function setUp()
 	{
 		$this->html = new Html_Dom();
+	}
+	
+	public function tearDown()
+	{
+		$this->html->clear();
+		unset($this->html);
 	}
 	
 	
@@ -165,7 +174,7 @@ HTML;
 		$this->assertEquals($es[0]->outertext, '<input type="checkbox" name="checkbox0" checked value="checkbox0">');
 	}
 
-	public function testRemoveAttribute()
+	public function testRemoveAttributes()
 	{
 		$str = <<<HTML
 <input type="checkbox" name="checkbox0">
@@ -180,5 +189,77 @@ HTML;
 		$this->assertEquals((string) $e, '<input type="checkbox">');
 		$e->type = null;
 		$this->assertEquals((string) $e, '<input>');
+		
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox0]', 0);
+		$e->name = null;
+		$this->assertEquals((string) $e, '<input type="checkbox">');
+		$e->type = null;
+		$this->assertEquals((string) $e, '<input>');
+		
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox1]', 0);
+		$e->value = null;
+		$this->assertEquals((string) $e, "<input type = \"checkbox\" name = 'checkbox1'>");
+		$e->type = null;
+		$this->assertEquals((string) $e, "<input name = 'checkbox1'>");
+		$e->name = null;
+		$this->assertEquals((string) $e, '<input>');
+		
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox1]', 0);
+		$e->type = null;
+		$this->assertEquals((string) $e, "<input name = 'checkbox1' value = \"checkbox1\">");
+		$e->name = null;
+		$this->assertEquals((string) $e, '<input value = "checkbox1">');
+		$e->value = null;
+		$this->assertEquals((string) $e, '<input>');
+	}
+
+	public function testRemoveNoValueAttributes()
+	{
+		$str = <<<HTML
+<input type="checkbox" checked name='checkbox0'>
+<input type="checkbox" name='checkbox1' checked>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox1]', 0);
+		$e->type = NULL;
+		$this->assertEquals((string) $e, "<input name='checkbox1' checked>");
+		$e->name = null;
+		$this->assertEquals((string) $e, "<input checked>");
+		$e->checked = NULL;
+		$this->assertEquals((string) $e, "<input>");
+		
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox0]', 0);
+		$e->type = NULL;
+		$this->assertEquals((string) $e, "<input checked name='checkbox0'>");
+		$e->name = NULL;
+		$this->assertEquals((string) $e, '<input checked>');
+		$e->checked = NULL;
+		$this->assertEquals((string) $e, '<input>');
+		
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('[name=checkbox0]', 0);
+		$e->checked = NULL;
+		$this->assertEquals((string) $e, "<input type=\"checkbox\" name='checkbox0'>");
+		$e->name = NULL;
+		$this->assertEquals((string) $e, '<input type="checkbox">');
+		$e->type = NULL;
+		$this->assertEquals((string) $e, "<input>");
 	}
 }
