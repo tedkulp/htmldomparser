@@ -17,74 +17,9 @@ $html = new Html_Dom;
 
 // -----------------------------------------------------------------------------
 // extract text
-$str = <<<HTML
-<b>okok</b>
-HTML;
-$html->load($str);
-assert($html==$str);
-assert($html->plaintext=='okok');
-
-$str = <<<HTML
-<div><b>okok</b></div>
-HTML;
-$html->load($str);
-assert($html==$str);
-assert($html->plaintext=='okok');
-
-$str = <<<HTML
-<div><b>okok</b>
-HTML;
-$html->load($str);
-assert($html==$str);
-assert($html->plaintext=='okok');
-
-$str = <<<HTML
-<b>okok</b></div>
-HTML;
-$html->load($str);
-assert($html==$str);
-assert($html->plaintext=='okok</div>');
-
 
 // -----------------------------------------------------------------------------
 // old fashion camel naming conventions test
-$str = <<<HTML
-<input type="checkbox" id="checkbox" name="checkbox" value="checkbox" checked>
-<input type="checkbox" id="checkbox1" name="checkbox1" value="checkbox1">
-<input type="checkbox" id="checkbox2" name="checkbox2" value="checkbox2" checked>
-HTML;
-$html->load($str);
-assert($html==$str);
-
-assert($html->getElementByTagName('input')->hasAttribute('checked')==true);
-assert($html->getElementsByTagName('input', 1)->hasAttribute('checked')==false);
-assert($html->getElementsByTagName('input', 1)->hasAttribute('not_exist')==false);
-
-assert($html->find('input', 0)->value==$html->getElementByTagName('input')->getAttribute('value'));
-assert($html->find('input', 1)->value==$html->getElementsByTagName('input', 1)->getAttribute('value'));
-
-assert($html->find('#checkbox1', 0)->value==$html->getElementById('checkbox1')->getAttribute('value'));
-assert($html->find('#checkbox2', 0)->value==$html->getElementsById('checkbox2', 0)->getAttribute('value'));
-
-$e = $html->find('[name=checkbox]', 0);
-assert($e->getAttribute('value')=='checkbox');
-assert($e->getAttribute('checked')==true);
-assert($e->getAttribute('not_exist')=='');
-
-$e->setAttribute('value', 'okok');
-assert($e=='<input type="checkbox" id="checkbox" name="checkbox" value="okok" checked>');
-
-$e->setAttribute('checked', false);
-assert($e=='<input type="checkbox" id="checkbox" name="checkbox" value="okok">');
-
-$e->setAttribute('checked', true);
-assert($e=='<input type="checkbox" id="checkbox" name="checkbox" value="okok" checked>');
-
-$e->removeAttribute('value');
-assert($e=='<input type="checkbox" id="checkbox" name="checkbox" checked>');
-
-$e->removeAttribute('checked');
-assert($e=='<input type="checkbox" id="checkbox" name="checkbox">');
 
 // -----------------------------------------------
 $str = <<<HTML

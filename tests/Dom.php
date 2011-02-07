@@ -262,4 +262,94 @@ HTML;
 		$e->type = NULL;
 		$this->assertEquals((string) $e, "<input>");
 	}
+
+	public function testPlaintext()
+	{
+		$str = <<<HTML
+<b>okok</b>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$this->assertEquals($this->html->plaintext, 'okok');
+	}
+	
+	public function testNestedHtmlPlaintext()
+	{
+		$str = <<<HTML
+<div><b>okok</b></div>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$this->assertEquals($this->html->plaintext, 'okok');
+	}
+	
+	public function testUnclosedHtmlPlaintext()
+	{
+		$str = <<<HTML
+<div><b>okok</b>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+
+		$this->assertEquals($this->html->plaintext, 'okok');
+	}
+	
+	public function testInvalidHtmlPlaintext()
+	{
+		$str = <<<HTML
+<b>okok</b></div>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$this->assertEquals($this->html->plaintext, 'okok</div>');
+	}
+	
+	public function testAttributeManipulation()
+	{
+		$str = <<<HTML
+<input type="checkbox" id="checkbox" name="checkbox" value="checkbox" checked>
+<input type="checkbox" id="checkbox1" name="checkbox1" value="checkbox1">
+<input type="checkbox" id="checkbox2" name="checkbox2" value="checkbox2" checked>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$this->assertTrue($this->html->getElementByTagName('input')->hasAttribute('checked'));
+		$this->assertFalse($this->html->getElementsByTagName('input', 1)->hasAttribute('checked'));
+		$this->assertFalse($this->html->getElementsByTagName('input', 1)->hasAttribute('not_exist'));
+		
+		$this->assertEquals($this->html->find('input', 0)->value, $this->html->getElementByTagName('input')->getAttribute('value'));
+		$this->assertEquals($this->html->find('input', 1)->value, $this->html->getElementsByTagName('input', 1)->getAttribute('value'));
+		
+		$this->assertEquals($this->html->find('#checkbox1', 0)->value, $this->html->getElementById('checkbox1')->getAttribute('value'));
+		$this->assertEquals($this->html->find('#checkbox2', 0)->value, $this->html->getElementsById('checkbox2', 0)->getAttribute('value'));
+		
+		$e = $this->html->find('[name=checkbox]', 0);
+		$this->assertEquals($e->getAttribute('value'), 'checkbox');
+		$this->assertTrue($e->getAttribute('checked'));
+		$this->assertEmpty($e->getAttribute('not_exist'));
+		
+		$e->setAttribute('value', 'okok');
+		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox" value="okok" checked>');
+		
+		$e->setAttribute('checked', false);
+		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox" value="okok">');
+		
+		$e->setAttribute('checked', true);
+		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox" value="okok" checked>');
+		
+		$e->removeAttribute('value');
+		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox" checked>');
+		
+		$e->removeAttribute('checked');
+		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox">');
+	}
 }
