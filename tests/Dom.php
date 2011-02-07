@@ -352,4 +352,104 @@ HTML;
 		$e->removeAttribute('checked');
 		$this->assertEquals((string) $e, '<input type="checkbox" id="checkbox" name="checkbox">');
 	}
+
+	public function testDivFamily()
+	{
+		$str = <<<HTML
+<div id="div1">
+    <div id="div10"></div>
+    <div id="div11"></div>
+    <div id="div12"></div>
+</div>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $this->html, $str);
+		
+		$e = $this->html->find('div#div1', 0);
+		$this->assertEquals($e->getFirstChild()->getAttribute('id'), 'div10');
+		$this->assertEquals($e->getLastChild()->getAttribute('id'), 'div12');
+		$this->assertNull($e->getNextSibling());
+		$this->assertNull($e->previousSibling());
+	}
+	
+	public function testDivGreaterFamily()
+	{
+		$str = <<<HTML
+<div id="div0">
+    <div id="div00"></div>
+</div>
+<div id="div1">
+    <div id="div10"></div>
+    <div id="div11">
+        <div id="div110"></div>
+        <div id="div111">
+            <div id="div1110"></div>
+            <div id="div1111"></div>
+            <div id="div1112"></div>
+        </div>
+        <div id="div112"></div>
+    </div>
+    <div id="div12"></div>
+</div>
+<div id="div2"></div>
+HTML;
+
+		$this->html->load($str);
+		$this->assertEquals((string) $html, $str);
+		
+		$this->assertTrue($this->html->getElementById("div1")->hasAttribute('id'));
+		$this->assertFalse($this->html->getElementById("div1")->hasAttribute('not_exist'));
+		
+		$this->assertEquals($this->html->getElementById("div1")->getAttribute('id')=='div1');
+		$this->assertEquals($this->html->getElementById("div1")->childNodes(0)->getAttribute('id')=='div10');
+		$this->assertEquals($this->html->getElementById("div1")->childNodes(1)->childNodes(1)->getAttribute('id')=='div111');
+		$this->assertEquals($this->html->getElementById("div1")->childNodes(1)->childNodes(1)->childNodes(2)->getAttribute('id')=='div1112');
+		
+		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->id, 'div11');
+		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->childNodes(1)->getAttribute('id'), 'div111');
+		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->childNodes(1)->childNodes(1)->getAttribute('id'), 'div1111');
+	}
+
+	public function testTagType()
+	{
+		$str = <<<HTML
+<ul class="menublock">
+    </li>
+        <ul>
+            <li>
+                <a href="http://www.cyberciti.biz/tips/pollsarchive">Polls Archive</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+HTML;
+
+		$this->html->load($str);
+		
+		$ul = $this->html->find('ul', 0);
+		$this->assertEquals($ul->getFirstChild()->tag, 'ul');
+	}
+	
+	public function testNestedTagTypes()
+	{
+		$str = <<<HTML
+<ul>
+    <li>Item 1 
+        <ul>
+            <li>Sub Item 1 </li>
+            <li>Sub Item 2 </li>
+        </ul>
+    </li>
+    <li>Item 2 </li>
+</ul>
+HTML;
+
+		$this->html->load($str);
+		$this->assert((string) $html, $str);
+		
+		$ul = $this->html->find('ul', 0);
+		$this->assertEquals($ul->getFirstChild()->tag, 'li');
+		$this->assertEquals($ul->getFirstChild()->getNextSibling()->tag, 'li');
+	}
 }
