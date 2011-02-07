@@ -131,9 +131,9 @@ HTML;
 		
 		$e = $this->html->find("#div1", 0);
 		$this->assertEquals($e->id, 'div1');
-		$this->assertEquals($e->getChildren(0)->id, 'div10');
-		$this->assertEquals($e->getChildren(1)->getChildren(1)->id, 'div111');
-		$this->assertEquals($e->getChildren(1)->getChildren(1)->getChildren(2)->id, 'div1112');
+		$this->assertEquals($e->getChild(0)->id, 'div10');
+		$this->assertEquals($e->getChild(1)->getChild(1)->id, 'div111');
+		$this->assertEquals($e->getChild(1)->getChild(1)->getChild(2)->id, 'div1112');
 	}
 	
 	public function testAdvancedSelectors()
