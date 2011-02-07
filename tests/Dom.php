@@ -370,7 +370,7 @@ HTML;
 		$this->assertEquals($e->getFirstChild()->getAttribute('id'), 'div10');
 		$this->assertEquals($e->getLastChild()->getAttribute('id'), 'div12');
 		$this->assertNull($e->getNextSibling());
-		$this->assertNull($e->previousSibling());
+		$this->assertNull($e->getPrevSibling());
 	}
 	
 	public function testDivGreaterFamily()
@@ -396,19 +396,19 @@ HTML;
 HTML;
 
 		$this->html->load($str);
-		$this->assertEquals((string) $html, $str);
+		$this->assertEquals((string) $this->html, $str);
 		
 		$this->assertTrue($this->html->getElementById("div1")->hasAttribute('id'));
 		$this->assertFalse($this->html->getElementById("div1")->hasAttribute('not_exist'));
 		
-		$this->assertEquals($this->html->getElementById("div1")->getAttribute('id')=='div1');
-		$this->assertEquals($this->html->getElementById("div1")->childNodes(0)->getAttribute('id')=='div10');
-		$this->assertEquals($this->html->getElementById("div1")->childNodes(1)->childNodes(1)->getAttribute('id')=='div111');
-		$this->assertEquals($this->html->getElementById("div1")->childNodes(1)->childNodes(1)->childNodes(2)->getAttribute('id')=='div1112');
+		$this->assertEquals($this->html->getElementById("div1")->getAttribute('id'), 'div1');
+		$this->assertEquals($this->html->getElementById("div1")->getChild(0)->getAttribute('id'), 'div10');
+		$this->assertEquals($this->html->getElementById("div1")->getChild(1)->getChild(1)->getAttribute('id'), 'div111');
+		$this->assertEquals($this->html->getElementById("div1")->getChild(1)->getChild(1)->getChild(2)->getAttribute('id'), 'div1112');
 		
-		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->id, 'div11');
-		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->childNodes(1)->getAttribute('id'), 'div111');
-		$this->assertEquals($this->html->getElementsById("div1", 0)->childNodes(1)->childNodes(1)->childNodes(1)->getAttribute('id'), 'div1111');
+		$this->assertEquals($this->html->getElementsById("div1", 0)->getChild(1)->id, 'div11');
+		$this->assertEquals($this->html->getElementsById("div1", 0)->getChild(1)->getChild(1)->getAttribute('id'), 'div111');
+		$this->assertEquals($this->html->getElementsById("div1", 0)->getChild(1)->getChild(1)->getChild(1)->getAttribute('id'), 'div1111');
 	}
 
 	public function testTagType()
@@ -446,7 +446,7 @@ HTML;
 HTML;
 
 		$this->html->load($str);
-		$this->assert((string) $html, $str);
+		$this->assertEquals((string) $this->html, $str);
 		
 		$ul = $this->html->find('ul', 0);
 		$this->assertEquals($ul->getFirstChild()->tag, 'li');
