@@ -214,7 +214,7 @@ class Html_Dom_Node
     public function getLastChild()
     {
         if (($count = count($this->children)) > 0)
-            return $this->getChild[$count - 1];
+            return $this->getChild($count - 1);
 		
         return NULL;
     }
