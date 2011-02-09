@@ -7,165 +7,36 @@ $dom = new Html_Dom;
 
 // -----------------------------------------------------------------------------
 //self-closing tags test
-$str = <<<HTML
-<hr>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-assert($e->outertext=='<hr id="foo">');
 // -----------------------------------------------
-$str = <<<HTML
-<hr/>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-assert($e->outertext=='<hr id="foo"/>');
 // -----------------------------------------------
-$str = <<<HTML
-<hr />
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-assert($e->outertext=='<hr id="foo" />');
 // -----------------------------------------------
-$str = <<<HTML
-<hr>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" class="bar">');
 // -----------------------------------------------
-$str = <<<HTML
-<hr/>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" class="bar"/>');
 // -----------------------------------------------
-$str = <<<HTML
-<hr />
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->id= 'foo';
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" class="bar" />');
 // -----------------------------------------------
-$str = <<<HTML
-<hr id="foo" kk=ll>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" kk=ll class="bar">');
 // -----------------------------------------------
-$str = <<<HTML
-<hr id="foo" kk="ll"/>
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" kk="ll" class="bar"/>');
 // -----------------------------------------------
-$str = <<<HTML
-<hr id="foo" kk=ll />
-HTML;
-$dom->load($str);
-$e = $dom->find('hr', 0);
-$e->class = 'bar';
-assert($e->outertext=='<hr id="foo" kk=ll class="bar" />');
 
 // -----------------------------------------------
-$str = <<<HTML
-<div><nobr></div>
-HTML;
-$dom->load($str);
-$e = $dom->find('nobr', 0);
-assert($e->outertext=='<nobr>');
 
 // -----------------------------------------------------------------------------
 // optional closing tags test
-$str = <<<HTML
-<body>
-</b><.b></a>
-</body>
-HTML;
-$dom = str_get_html($str);
-assert($dom->find('body', 0)->outertext==$str);
 
 // -----------------------------------------------
-$str = <<<HTML
-<html>
-    <body>
-        <a>foo</a>
-        <a>foo2</a>
-HTML;
-$dom = str_get_html($str);
-assert($dom==$str);
-assert($dom->find('html body a', 1)->innertext=='foo2');
-
 // -----------------------------------------------
-$str = <<<HTML
-HTML;
-$dom = str_get_html($str);
-assert($dom==$str);
-assert($dom->find('html a', 1)===null);
+
 //assert($dom->find('html a', 1)->innertext=='foo2');
 
 // -----------------------------------------------
-$str = <<<HTML
-<body>
-<div>
-</body>
-HTML;
-$dom = str_get_html($str);
-assert($dom==$str);
-assert($dom->find('body', 0)->outertext==$str);
+
 
 // -----------------------------------------------
-$str = <<<HTML
-<body>
-<div> </a> </div>
-</body>
-HTML;
-$dom = str_get_html($str);
 
-assert($dom->find('body', 0)->outertext==$str);
 
 // -----------------------------------------------
-$str = <<<HTML
-<table>
-    <tr>
-        <td><b>aa</b>
-    <tr>
-        <td><b>bb</b>
-</table>
-HTML;
-$dom = str_get_html($str);
 
-assert($dom==$str);
 
 // -----------------------------------------------
-$str = <<<HTML
-<table>
-<tr><td>1<td>2<td>3
-</table>
-HTML;
-$dom = str_get_html($str);
-assert(count($dom->find('td'))==3);
-assert($dom->find('td', 0)->innertext=='1');
-assert($dom->find('td', 0)->outertext=='<td>1');
-assert($dom->find('td', 1)->innertext=='2');
-assert($dom->find('td', 1)->outertext=='<td>2');
-assert($dom->find('td', 2)->innertext=="3\r\n");
-assert($dom->find('td', 2)->outertext=="<td>3\r\n");
+
 
 // -----------------------------------------------
 $str = <<<HTML

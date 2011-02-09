@@ -2,6 +2,7 @@
 
 require_once 'Dom.php';
 require_once 'Element.php';
+require_once 'Invalid.php';
 require_once 'Misc.php';
  
 class AllTests
@@ -12,6 +13,7 @@ class AllTests
 
 		$suite->addTestSuite('DomTest');
 		$suite->addTestSuite('ElementTest');
+		$suite->addTestSuite('InvalidTest');
 		$suite->addTestSuite('MiscTest');
 
 		return $suite;
